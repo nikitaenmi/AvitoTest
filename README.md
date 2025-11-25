@@ -127,8 +127,9 @@
 ├── go.mod                         - Модули Go (зависимости)
 ├── go.sum                         - Хеши зависимостей
 ├── README.md                      - Документация проекта
-└── samples 
-    └── .env.example               - Пример .env-файла      
+├── samples 
+│   └── .env.example               - Пример .env-файла    
+└── .env                           - .env-файл 
 ```
 
 ### Технологии
@@ -141,7 +142,7 @@
 
 ## Запуск проекта
 
-Клонируйте репозиторий и настройте .env:
+Клонируйте репозиторий:
 ```sh
 git clone <https://github.com/nikitaenmi/AvitoTest>
 cd AvitoTest
@@ -283,6 +284,7 @@ set_user_active                125      125        0     100.0%        12       
 create_pr_invalid              125      125        0     100.0%         6       311
 create_pr                      125      125        0     100.0%        31       471
 ```
+
 
 ## Описание конфигурации линтера
 
