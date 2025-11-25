@@ -144,7 +144,7 @@
 
 Клонируйте репозиторий:
 ```sh
-git clone <https://github.com/nikitaenmi/AvitoTest>
+git clone https://github.com/nikitaenmi/AvitoTest
 cd AvitoTest
 ```
 Вызовите docker-compose:
