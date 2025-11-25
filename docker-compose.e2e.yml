@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  postgres-e2e:
+    image: postgres:15-alpine
+    container_name: postgres_db_e2e
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: pr_review_test
+    ports:
+      - "5433:5432"
+    volumes:
+      - ./migrations:/docker-entrypoint-initdb.d
+    networks:
+      - e2e-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U test -d pr_review_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  app-e2e:
+    build: .
+    container_name: pr_review_app_e2e
+    depends_on:
+      postgres-e2e:
+        condition: service_healthy
+    environment:
+      DATABASE_HOST: postgres-e2e
+      DATABASE_PORT: "5432"
+      DATABASE_USER: test
+      DATABASE_PASSWORD: test
+      DATABASE_NAME: pr_review_test
+      DATABASE_SSL_MODE: disable
+      SERVER_HOST: "0.0.0.0"
+      SERVER_PORT: "8080"
+      SERVER_READ_TIMEOUT: "5s"
+      SERVER_WRITE_TIMEOUT: "10s"
+      SERVER_IDLE_TIMEOUT: "60s"
+    ports:
+      - "8081:8080"
+    networks:
+      - e2e-network
+    healthcheck:  
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  e2e-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile.e2e
+    container_name: e2e_tests
+    depends_on:
+      app-e2e:
+        condition: service_healthy 
+    environment:
+      BASE_URL: "http://app-e2e:8080"
+    networks:
+      - e2e-network
+
+networks:
+  e2e-network:
+    driver: bridge

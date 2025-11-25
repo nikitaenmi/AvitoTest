@@ -1,0 +1,29 @@
+version: "2"
+
+run:
+  relative-path-mode: gomod
+  tests: false
+  timeout: 2m
+  concurrency: 5
+  allow-parallel-runners: true
+
+linters:
+  enable:
+    - govet
+    - errcheck
+    - ineffassign
+    - unused
+    - bodyclose
+    - unparam
+    - misspell
+    - dupl
+    - gocyclo
+    - prealloc
+  disable:
+    - staticcheck
+
+formatters:
+  enable:
+    - gofmt
+    - gofumpt
+    - goimports
